@@ -3,44 +3,30 @@ const app = express();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 
-app.use(bodyParser.json());
+app.use(bodyParser.json()); // used to read json files
 
 app.listen(3000, () => {
   console.log("node is running...");
 });
 
+//.... connecting with mongoDB
+
 mongoose
-  .connect("mongodb://localhost:27017/crud")
+  .connect("mongodb://localhost:27017/crudOperation")
   .then(() => {
-    console.log("connected to the database"); //to check connected or not
+    console.log("connected to the database");
   })
   .catch((error) => {
-    console.log(error); //to see what's the error if occurs
+    console.log(error);
   });
 
-const itemSchema = new mongoose.Schema({
+//.... creating student model for DB
+
+const studentSchema = new mongoose.Schema({
   name: String,
-  quantity: Number,
+  age: Number,
+  class: Number,
+  section: String,
 });
 
-const Item = mongoose.model("Item", itemSchema);
-
-//creating data in mongoDB
-app.post("/addStudent", async (req, res) => {
-  try {
-    const newStudent = new Item(req.body);
-    await newStudent.save();
-    res.status(201).send(newStudent);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
-
-app.get("/getStudent", async (req, res) => {
-  try {
-    const getStudent = await Item.find({});
-    res.status(200).send(getStudent);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
+const studentModel = mongoose.model("studentModel", studentSchema);
